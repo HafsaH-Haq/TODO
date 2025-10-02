@@ -7,7 +7,7 @@ document.getElementById("todo-form").onsubmit = async (e) => {
     const user_id = document.getElementById("todo-user-id").value;
     if (!user_id || !task) return;
 
-    await fetch(${API_BASE}/todo/add-item, {
+    await fetch(`${API_BASE}/todo/add-item`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id, task, done: false })
@@ -24,7 +24,7 @@ document.getElementById("fetch-todos-btn").onclick = function() {
 };
 
 async function loadTodos(user_id) {
-    const res = await fetch(${API_BASE}/todo/get-items/${user_id});
+    const res = await fetch(`${API_BASE}/todo/get-items/${user_id}`);
     const todos = await res.json();
 
     const list = document.getElementById("todo-list");
@@ -56,11 +56,12 @@ async function loadTodos(user_id) {
 }
 
 // --- Update Todo ---
-async function updateTodo(todo_id, user_id, newTask, doneStatus) {
-    await fetch(${API_BASE}/todo/update-item/${todo_id}, {
+async function updateTodo(item_id, user_id, newTask, doneStatus) {
+    await fetch(`${API_BASE}/todo/update-item`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+            item_id,
             user_id,
             task: newTask,
             done: doneStatus
@@ -70,9 +71,11 @@ async function updateTodo(todo_id, user_id, newTask, doneStatus) {
 }
 
 // --- Delete Todo ---
-async function deleteTodo(todo_id, user_id) {
-    await fetch(${API_BASE}/todo/delete-item/${todo_id}, {
-        method: "DELETE"
+async function deleteTodo(item_id, user_id) {
+    await fetch(`${API_BASE}/todo/delete-item`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_id })
     });
     loadTodos(user_id);
 }
